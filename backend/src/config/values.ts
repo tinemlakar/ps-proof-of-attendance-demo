@@ -47,6 +47,7 @@ export enum PaginationValues {
 export enum RequestToken {
   AUTH_ADMIN = "authAdmin",
   AIRDROP_EMAIL = "airdropEmail",
+  DROP_RESERVATION = "dropReservation",
 }
 
 /**
@@ -74,6 +75,7 @@ export enum AuthorizationErrorCode {
 export enum ValidatorErrorCode {
   DEFAULT = 422000,
   POAP_DROP_REQUIRED_DATA_NOT_PRESENT = 422001,
+  DROP_RESERVATION_REQUIRED_DATA_NOT_PRESENT = 422002,
   USERS_NOT_PRESENT = 422004,
   DATA_MODEL_STATUS_MISSING = 422100,
   DATA_MODEL_INVALID_STATUS = 422101,

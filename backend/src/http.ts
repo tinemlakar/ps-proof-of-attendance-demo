@@ -13,6 +13,7 @@ import { inject as injectRenders } from "./middlewares/renders";
 import { inject as injectGetRoot } from "./routes/get-root";
 import { inject as injectAdminLogin } from "./routes/admin-login";
 import { inject as injectPoapDrop } from "./routes/poap-drop";
+import { inject as injectDropReservationToken } from "./routes/drop-reservation-token";
 
 export interface Request extends express.Request {
   context: Context;
@@ -69,6 +70,7 @@ export class HttpServer {
     injectGetRoot(this.app);
     injectAdminLogin(this.app);
     injectPoapDrop(this.app);
+    injectDropReservationToken(this.app);
 
     // ERROR HANDLER
     injectErrors(this.app);

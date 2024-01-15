@@ -43,6 +43,18 @@ export function generateAdminAuthToken(wallet: string, exp?: string | number) {
 }
 
 /**
+ * Generate a new token, used to access mint reservation page
+ */
+export function generateDropReservationToken() {
+  const subject = RequestToken.DROP_RESERVATION;
+  const token = jwt.sign({}, env.APP_SECRET, {
+    subject,
+    expiresIn: "5m",
+  });
+  return token;
+}
+
+/**
  * Returns authentication token data.
  * @param token Authentication token.
  * @param ctx Request context.
@@ -86,6 +98,22 @@ export function readEmailAirdropToken(token: string) {
     } else {
       return null;
     }
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * Parses a request token needed to verify profile/email. Request token expires in one day.
+ * @param token Request token.
+ * @param ctx Request context.
+ */
+export function readMintReservationToken(token: string) {
+  const subject = RequestToken.DROP_RESERVATION;
+  try {
+    jwt.verify(token, env.APP_SECRET, {
+      subject,
+    }) as any;
   } catch (e) {
     return null;
   }
