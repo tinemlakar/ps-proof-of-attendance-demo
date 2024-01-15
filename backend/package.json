@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npx jest --config jestconfig.json --forceExit --detectOpenHandles --runInBand",
-    "development:run": "node -r ts-node/register --inspect ./src/scripts/start-http",
+    "development:run": "nodemon -r ts-node/register --inspect ./src/scripts/start-http",
     "cron": "node -r ts-node/register --inspect ./src/scripts/start-cron",
     "dev": "npm run development:run",
     "tsc": "tsc",
@@ -45,7 +45,8 @@
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.1",
     "ts-mysql-migrate": "^1.0.2",
-    "typescript": "^5.3.2"
+    "typescript": "^5.3.2",
+    "nodemon": "^3.0.2"
   },
   "author": "Apillon",
   "license": "ISC"

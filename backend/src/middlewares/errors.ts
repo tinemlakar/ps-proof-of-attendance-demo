@@ -68,7 +68,7 @@ export function handleError(
       error.model.collectErrors().map((e) => ({
         code: e.code,
         message: messages(e.code),
-        path: e.path,
+        path: e.path.length ? e.path[0] : "",
       }))
     );
   } else {

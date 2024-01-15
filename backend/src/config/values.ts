@@ -1,8 +1,8 @@
 export enum AppEnvironment {
-  DEV = 'development',
-  TEST = 'testing',
-  STG = 'staging',
-  PROD = 'production'
+  DEV = "development",
+  TEST = "testing",
+  STG = "staging",
+  PROD = "production",
 }
 
 /**
@@ -12,6 +12,7 @@ export enum SerializedStrategy {
   PROFILE = "profile",
   DB = "db",
   EXTENDED_DB = "extended_db",
+  UPDATE_DB = "update_db",
   ADMIN = "admin",
 }
 
@@ -72,9 +73,7 @@ export enum AuthorizationErrorCode {
  */
 export enum ValidatorErrorCode {
   DEFAULT = 422000,
-  PROFILE_EMAIL_NOT_PRESENT = 422001,
-  PROFILE_EMAIL_NOT_VALID = 422002,
-  PROFILE_EMAIL_ALREADY_TAKEN = 422003,
+  POAP_DROP_REQUIRED_DATA_NOT_PRESENT = 422001,
   USERS_NOT_PRESENT = 422004,
   DATA_MODEL_STATUS_MISSING = 422100,
   DATA_MODEL_INVALID_STATUS = 422101,
@@ -92,4 +91,5 @@ export enum RouteErrorCode {
   SIGNATURE_NOT_PRESENT = 400005,
   REQUEST_TOKEN_NOT_PRESENT = 400006,
   AIRDROP_ALREADY_CLAIMED = 400007,
+  POAP_DROP_DOES_NOT_EXISTS = 400008,
 }
