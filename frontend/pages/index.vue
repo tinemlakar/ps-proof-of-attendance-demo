@@ -17,7 +17,7 @@
         />
       </div>
       <span v-if="poapStore.poaps.length == 0">You dont have any POAP drops yet.</span>
-      <Btn type="primary" @click="router.push({ name: 'create-poap' })">Create new poap</Btn>
+      <Btn type="primary" @click="router.push('create-poap')">Create new poap</Btn>
     </div>
   </div>
 </template>

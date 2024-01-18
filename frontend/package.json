@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.10",
+    "jwt-decode": "^4.0.0",
     "query-string": "^8.1.0",
     "vue-papa-parse": "^3.1.0"
   },
@@ -31,7 +32,7 @@
     "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-vue": "^9.17.0",
-    "naive-ui": "^2.34.4",
+    "naive-ui": "^2.37.3",
     "nuxt": "^3.6.5",
     "nuxt-icons": "^3.2.1",
     "pinia": "^2.1.6",
