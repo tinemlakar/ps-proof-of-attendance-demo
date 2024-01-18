@@ -59,7 +59,7 @@ export class PoapDrop extends BaseSqlModel {
     ],
     fakeValue: new Date(),
   })
-  public start_time: Date;
+  public startTime: Date;
 
   @prop({
     parser: { resolver: dateParser() },
@@ -77,7 +77,7 @@ export class PoapDrop extends BaseSqlModel {
     ],
     fakeValue: new Date(),
   })
-  public end_time: Date;
+  public endTime: Date;
 
   @prop({
     parser: { resolver: stringTrimParser() },
@@ -105,7 +105,7 @@ export class PoapDrop extends BaseSqlModel {
       },
     ],
   })
-  public collection_uuid: string;
+  public collectionUuid: string;
 
   public async validateAndCreate(conn?: PoolConnection) {
     try {

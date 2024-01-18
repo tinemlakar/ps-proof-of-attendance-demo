@@ -17,6 +17,13 @@ export function inject(app: Application) {
     getPoapDrops(req, res).catch(next);
   });
 
+  app.get(
+    "/poap-drops/:dropId",
+    (req: Request, res: Response, next: NextFunction) => {
+      getPoapDrops(req, res).catch(next);
+    }
+  );
+
   app.put("/poap-drops", (req: Request, res: Response, next: NextFunction) => {
     putPoapDrop(req, res).catch(next);
   });
@@ -24,7 +31,16 @@ export function inject(app: Application) {
 
 export async function getPoapDrops(req: Request, res: Response): Promise<void> {
   const { context, params, query } = req;
-  return res.respond(200, await new PoapDrop({}, { context }).getList(query));
+  if (params.dropId) {
+    return res.respond(
+      200,
+      (
+        await new PoapDrop({}, { context }).populateById(+params.dropId)
+      ).serialize(SerializedStrategy.ADMIN)
+    );
+  } else {
+    return res.respond(200, await new PoapDrop({}, { context }).getList(query));
+  }
 }
 
 export async function putPoapDrop(req: Request, res: Response): Promise<void> {

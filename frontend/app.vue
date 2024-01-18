@@ -1,10 +1,15 @@
 <script lang="ts" setup>
+import { darkTheme } from 'naive-ui';
 import { NaiveTheme } from '~/lib/config/naive';
 </script>
 
 <template>
   <div class="h-full">
-    <n-config-provider :theme-overrides="NaiveTheme" class="flex h-full flex-col">
+    <n-config-provider
+      :theme-overrides="NaiveTheme"
+      :theme="darkTheme"
+      class="flex h-full flex-col"
+    >
       <n-message-provider>
         <NuxtLayout>
           <NuxtPage />

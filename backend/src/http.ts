@@ -14,6 +14,7 @@ import { inject as injectGetRoot } from "./routes/get-root";
 import { inject as injectAdminLogin } from "./routes/admin-login";
 import { inject as injectPoapDrop } from "./routes/poap-drop";
 import { inject as injectDropReservationToken } from "./routes/drop-reservation-token";
+import { inject as injectGetCollections } from "./routes/get-collection";
 
 export interface Request extends express.Request {
   context: Context;
@@ -71,6 +72,8 @@ export class HttpServer {
     injectAdminLogin(this.app);
     injectPoapDrop(this.app);
     injectDropReservationToken(this.app);
+    injectGetCollections(this.app);
+    this.app;
 
     // ERROR HANDLER
     injectErrors(this.app);

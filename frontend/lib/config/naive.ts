@@ -1,5 +1,5 @@
-import colors from '~~/tailwind.colors';
 import type { GlobalThemeOverrides, MessageProviderProps } from 'naive-ui';
+import colors from '~~/tailwind.colors';
 
 type MessageThemeOverrides = NonNullable<MessageProviderProps['themeOverrides']>;
 const messageOverrides: MessageThemeOverrides = {
@@ -280,5 +280,15 @@ export const NaiveTheme: GlobalThemeOverrides = {
     draggerBorder: `none`,
     draggerBorderHover: `none`,
     draggerColor: colors.bg.light,
+  },
+  DataTable: {
+    borderColor: colors.bg.lighter,
+    tdColor: colors.bg.DEFAULT,
+    tdColorHover: colors.bg.dark,
+    tdTextColor: colors.white,
+    thColor: colors.bg.DEFAULT,
+    thColorHover: colors.bg.DEFAULT,
+    thFontWeight: '700',
+    thTextColor: colors.white,
   },
 };

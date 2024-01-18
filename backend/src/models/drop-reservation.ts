@@ -29,7 +29,7 @@ export class DropReservation extends BaseSqlModel {
       },
     ],
   })
-  public poap_drop_id: number;
+  public poapDrop_id: number;
 
   @prop({
     parser: { resolver: stringTrimParser() },
@@ -47,6 +47,8 @@ export class DropReservation extends BaseSqlModel {
     ],
   })
   public email: string;
+
+  public async populateByDropAndEmail(poapDrop_id: number, email: string) {}
 
   public async validateAndCreate(conn?: PoolConnection) {
     try {

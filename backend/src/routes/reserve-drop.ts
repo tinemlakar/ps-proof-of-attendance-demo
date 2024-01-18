@@ -7,6 +7,7 @@ import {
 import { NextFunction, Request, Response } from "../http";
 import { PoapDrop } from "../models/poap-drop";
 import { ResourceError } from "../lib/errors";
+import { DropReservation } from "../models/drop-reservation";
 
 /**
  * Installs new route on the provided application.
@@ -29,7 +30,8 @@ export async function resolve(req: Request, res: Response): Promise<void> {
     throw new ResourceError(RouteErrorCode.POAP_DROP_DOES_NOT_EXISTS);
   }
 
-  //
+  //check if reservation for that email already exists
+  const dropReservation = await new DropReservation({}, { context}).
 
   return res.respond(200, {});
 }
