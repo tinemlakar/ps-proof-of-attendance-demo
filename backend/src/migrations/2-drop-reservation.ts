@@ -5,7 +5,10 @@ export async function upgrade(
     CREATE TABLE IF NOT EXISTS \`drop_reservation\` (
       \`id\` INT NOT NULL AUTO_INCREMENT,
       \`poapDrop_id\` INT NOT NULL,
+      \`airdropStatus\` INT NULL,
       \`email\` VARCHAR(255) NOT NULL,
+      \`wallet\` VARCHAR(80) NULL,
+      \`txHash\` VARCHAR(80) NULL DEFAULT NULL,
       \`status\` INT NULL,
       \`createTime\` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
       \`updateTime\` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

@@ -7,6 +7,7 @@ import {
 import { NextFunction, Request, Response } from "../http";
 import { PoapDrop } from "../models/poap-drop";
 import { ResourceError } from "../lib/errors";
+import { DropReservation } from "../models/drop-reservation";
 
 /**
  * Installs new route on the provided application.
@@ -27,6 +28,13 @@ export function inject(app: Application) {
   app.put("/poap-drops", (req: Request, res: Response, next: NextFunction) => {
     putPoapDrop(req, res).catch(next);
   });
+
+  app.get(
+    "/poap-drops/:dropId/drop-reservations",
+    (req: Request, res: Response, next: NextFunction) => {
+      getPoapDropReservations(req, res).catch(next);
+    }
+  );
 }
 
 export async function getPoapDrops(req: Request, res: Response): Promise<void> {
@@ -68,4 +76,16 @@ export async function putPoapDrop(req: Request, res: Response): Promise<void> {
 
     await poapDrop.validateAndUpdate();
   }
+}
+
+export async function getPoapDropReservations(
+  req: Request,
+  res: Response
+): Promise<void> {
+  const { context, params, query } = req;
+  query.poapDrop_id = params.dropId;
+  return res.respond(
+    200,
+    await new DropReservation({}, { context }).getList(query)
+  );
 }

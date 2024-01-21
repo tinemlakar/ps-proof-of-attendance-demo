@@ -1,6 +1,7 @@
-import { dateParser, integerParser } from "@rawmodel/parsers";
+import { integerParser, stringParser } from "@rawmodel/parsers";
 import { presenceValidator } from "@rawmodel/validators";
 import {
+  AirdropStatus,
   PopulateStrategy,
   SerializedStrategy,
   ValidatorErrorCode,
@@ -48,7 +49,59 @@ export class DropReservation extends BaseSqlModel {
   })
   public email: string;
 
-  public async populateByDropAndEmail(poapDrop_id: number, email: string) {}
+  @prop({
+    parser: { resolver: integerParser() },
+    populatable: [PopulateStrategy.DB, PopulateStrategy.ADMIN],
+    serializable: [
+      SerializedStrategy.DB,
+      SerializedStrategy.PROFILE,
+      SerializedStrategy.ADMIN,
+    ],
+    validators: [
+      {
+        resolver: presenceValidator(),
+        code: ValidatorErrorCode.DROP_RESERVATION_REQUIRED_DATA_NOT_PRESENT,
+      },
+    ],
+    defaultValue: AirdropStatus.PENDING,
+  })
+  public airdropStatus: AirdropStatus;
+
+  @prop({
+    parser: { resolver: stringParser() },
+    populatable: [PopulateStrategy.DB],
+    serializable: [
+      SerializedStrategy.DB,
+      SerializedStrategy.PROFILE,
+      SerializedStrategy.ADMIN,
+    ],
+    fakeValue: null,
+  })
+  public wallet: string;
+
+  @prop({
+    parser: { resolver: stringParser() },
+    populatable: [PopulateStrategy.DB],
+    serializable: [SerializedStrategy.DB, SerializedStrategy.ADMIN],
+    fakeValue: null,
+  })
+  public txHash: string;
+
+  public async populateByDropAndEmail(poapDrop_id: number, email: string) {
+    const data = await this.db().paramQuery(
+      `
+      SELECT * FROM ${this._tableName}
+      WHERE poapDrop_id = @poapDrop_id AND email = @email
+    `,
+      { poapDrop_id, email }
+    );
+
+    if (data && data.length) {
+      return this.populate(data[0], PopulateStrategy.DB);
+    } else {
+      return this.reset();
+    }
+  }
 
   public async validateAndCreate(conn?: PoolConnection) {
     try {
@@ -86,10 +139,10 @@ export class DropReservation extends BaseSqlModel {
     await this.update(SerializedStrategy.UPDATE_DB, { conn });
   }
 
-  /*public async getList(urlQuery) {
+  public async getList(urlQuery) {
     const { params, filters } = getQueryParams(
-      { id: null, title: null, status: null },
-      "pd",
+      { poap_id: null },
+      "dr",
       {},
       urlQuery
     );
@@ -102,19 +155,17 @@ export class DropReservation extends BaseSqlModel {
         SELECT *
         `,
       qFrom: `
-        FROM poap_drop pd
+        FROM drop_reservation dr
         WHERE
-          (@id IS NULL OR pd.id = @id)
-          AND (@title IS NULL OR pd.title LIKE CONCAT('%', @title, '%'))
-          AND (@status IS NULL OR pd.status = @status)
+          (@poapDrop_id = dr.poapDrop_id)
         `,
       qGroup: `
         `,
       qFilter: `
         ORDER BY ${
           filters.orderArr
-            ? `${filters.orderArr.join(", ") || "pd.updateTime DESC"}`
-            : "pd.updateTime DESC"
+            ? `${filters.orderArr.join(", ") || "dr.updateTime DESC"}`
+            : "dr.updateTime DESC"
         }
         ${
           filters.limit !== null
@@ -124,6 +175,6 @@ export class DropReservation extends BaseSqlModel {
       `,
     };
 
-    return await selectAndCountQuery(this.db(), sqlQuery, params, "pd.id");
-  }*/
+    return await selectAndCountQuery(this.db(), sqlQuery, params, "dr.id");
+  }
 }

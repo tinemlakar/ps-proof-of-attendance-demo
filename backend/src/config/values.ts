@@ -50,6 +50,16 @@ export enum RequestToken {
   DROP_RESERVATION = "dropReservation",
 }
 
+export enum AirdropStatus {
+  PENDING = 1,
+  EMAIL_SENT = 2,
+  EMAIL_ERROR = 3,
+  WALLET_LINKED = 4,
+  TRANSACTION_CREATED = 5,
+  AIRDROP_COMPLETED = 6,
+  AIRDROP_ERROR = 7,
+}
+
 /**
  * System Error codes.
  */
@@ -67,6 +77,8 @@ export enum AuthorizationErrorCode {
   UNKNOWN_USER = 403002,
   UNAUTHORIZED = 403003,
   NOT_ACTIVATED = 403004,
+  INVALID_TOKEN = 403005,
+  TOKEN_EXPIRED = 403006,
 }
 
 /**
@@ -94,4 +106,6 @@ export enum RouteErrorCode {
   REQUEST_TOKEN_NOT_PRESENT = 400006,
   AIRDROP_ALREADY_CLAIMED = 400007,
   POAP_DROP_DOES_NOT_EXISTS = 400008,
+  DROP_ALREADY_RESERVED = 400009,
+  DROP_RESERVATION_DOES_NOT_EXISTS = 400010,
 }

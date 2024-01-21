@@ -8,15 +8,15 @@
       <Btn v-if="!poapStore.poaps" type="primary" @click="login()">Login</Btn>
     </div>
     <div v-if="poapStore.poaps" class="flex flex-col">
-      <div v-if="poapStore.poaps.length != 0">
+      <div v-if="poapStore.poaps?.items?.length != 0">
         <n-data-table
           :columns="columns"
-          :data="poapStore.poaps"
+          :data="poapStore.poaps.items"
           :pagination="pagination"
           :bordered="false"
         />
       </div>
-      <span v-if="poapStore.poaps.length == 0">You dont have any POAP drops yet.</span>
+      <span v-if="poapStore.poaps.items.length == 0">You dont have any POAP drops yet.</span>
       <Btn type="primary" @click="router.push('create-poap')">Create new poap</Btn>
     </div>
   </div>

@@ -34,4 +34,9 @@ onMounted(async () => {
     qrCodeText.value = (response as any).data.token;
   }, 5000);
 });
+
+onBeforeUnmount(() => {
+  console.info('onBefore unmount');
+  clearInterval(qrCodeInterval);
+});
 </script>

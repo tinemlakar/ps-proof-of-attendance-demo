@@ -8,13 +8,13 @@ import { env } from "../config/env";
  * @param email
  * @param ctx
  */
-export function generateEmailAirdropToken(email: string) {
-  if (!email) {
+export function generateEmailAirdropToken(email: string, poapId: number) {
+  if (!email || !poapId) {
     return null;
   }
   const exp = "30 days";
   const subject = RequestToken.AIRDROP_EMAIL;
-  const token = jwt.sign({ email }, env.APP_SECRET, {
+  const token = jwt.sign({ email, poapId }, env.APP_SECRET, {
     subject,
     expiresIn: exp,
   });
@@ -86,13 +86,14 @@ export function readAdminAuthToken(token: string) {
 export function readEmailAirdropToken(token: string) {
   const subject = RequestToken.AIRDROP_EMAIL;
   try {
-    const { email } = jwt.verify(token, env.APP_SECRET, {
+    const { email, poapId } = jwt.verify(token, env.APP_SECRET, {
       subject,
     }) as any;
     console.log();
     if (email) {
       return {
         email: email as string,
+        poapId: poapId as string,
         subject,
       };
     } else {
@@ -108,10 +109,10 @@ export function readEmailAirdropToken(token: string) {
  * @param token Request token.
  * @param ctx Request context.
  */
-export function readMintReservationToken(token: string) {
+export function readDropReservationToken(token: string) {
   const subject = RequestToken.DROP_RESERVATION;
   try {
-    jwt.verify(token, env.APP_SECRET, {
+    return jwt.verify(token, env.APP_SECRET, {
       subject,
     }) as any;
   } catch (e) {
