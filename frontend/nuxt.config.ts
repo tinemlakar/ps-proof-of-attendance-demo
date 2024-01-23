@@ -1,19 +1,12 @@
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
-import dev from './lib/config/development';
-import stg from './lib/config/staging';
-import prod from './lib/config/production';
 import { Environments } from './lib/values/general.values';
+import { getConfig } from './lib/utils/utils';
 
 const env = process.env.ENV ? process.env.ENV : process.env.NODE_ENV;
 
-let CONFIG = dev;
-if (env === Environments.prod) {
-  CONFIG = prod;
-} else if (env === Environments.stg) {
-  CONFIG = stg;
-}
+const CONFIG = getConfig();
 
 const meta = {
   title: 'Apillon POA prebuild solution',

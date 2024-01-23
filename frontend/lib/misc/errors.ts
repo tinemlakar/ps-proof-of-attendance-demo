@@ -56,6 +56,17 @@ export function getErrorMsg(code = 500001, defaultMessage = '') {
  * Define message for each error
  */
 export const ErrorCodes = {
+  400000: 'Invalid request',
+  400001: 'Profile not identified',
+  400002: 'Profile credentials invalid',
+  400003: 'Request token invalid',
+  400004: 'User does not exists',
+  400005: 'Signature not present',
+  400006: 'Request token not present',
+  400007: 'Airdrop already claimed',
+  400008: 'Poap drop does not exists',
+  400009: 'Drop already reserved',
+  400010: 'Drop reservation does not exists',
   // SystemErrorCode
   500000: 'DEFAULT_SYSTEM_ERROR',
   500001: 'There was an error with your request. Please try again later.',

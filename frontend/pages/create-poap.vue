@@ -1,8 +1,8 @@
 <template>
   <div class="grid justify-items-center">
-    <h1>Create new POAP drop</h1>
-    <div v-if="currStep == 1" class="flex flex-col" style="width: 600px">
-      <h2>Select existing NFT collection on Apillon</h2>
+    <h1>{{ title }}</h1>
+    <div v-if="currStep == 1" class="flex flex-col mt-8" style="width: 600px">
+      <p>Select existing NFT collection on Apillon</p>
       <n-select
         v-model:value="formData.collectionUuid"
         class="mt-4"
@@ -21,7 +21,7 @@
         </a>
       </div>
 
-      <Btn size="small" type="primary" class="mt-12" @click="currStep = 2">Next</Btn>
+      <Btn size="small" type="primary" class="mt-12" @click="validateFormAndProceed()">Next</Btn>
     </div>
     <div v-if="currStep == 2" class="flex flex-col" style="width: 600px">
       <n-form ref="formRef" :model="formData" :rules="rules" @submit.prevent="handleSubmit">
@@ -38,11 +38,14 @@
         <n-form-item path="endTime" label="End time" :label-props="{ for: 'endTime' }">
           <n-date-picker v-model:value="formData.endTime" type="datetime" clearable />
         </n-form-item>
+        <n-form-item path="website" label="Website" :label-props="{ for: 'website' }">
+          <n-input v-model:value="formData.website" clearable />
+        </n-form-item>
       </n-form>
-      <Btn size="small" type="primary" class="mt-12" @click="currStep = 3">Next</Btn>
+      <Btn size="small" type="primary" class="mt-12" @click="validateFormAndProceed()">Next</Btn>
     </div>
-    <div v-if="currStep == 3" class="flex flex-col" style="width: 600px">
-      <p>Here is the overview of the deploy.</p>
+    <div v-if="currStep == 3" class="flex flex-col pt-8" style="width: 600px">
+      <p>Here is the overview of the POAP drop:</p>
       <div class="flex flex-col">
         <div>
           <span class="font-bold">Target NFT collection: </span
@@ -62,20 +65,44 @@
           ><span>{{ dateToDateTime(new Date(formData.startTime)) }}</span>
         </div>
         <div>
-          <span class="font-bold">Event end date: </span>><span>{{
-            dateToDateTime(new Date(formData.endTime))
-          }}</span>
+          <span class="font-bold">Event end date: </span
+          ><span>{{ dateToDateTime(new Date(formData.endTime)) }}</span>
         </div>
       </div>
-      <Btn size="small" type="primary" class="mt-12" @click="createPoapDrop()">Create</Btn>
+      <Btn size="small" type="primary" class="mt-12" :loading="loading" @click="createPoapDrop()"
+        >Create</Btn
+      >
+    </div>
+    <div v-if="currStep == 4" class="max-w-md w-full md:px-6 my-12 mx-auto">
+      <img :src="SuccessSVG" class="mx-auto" width="165" height="169" alt="airdrop" />
+
+      <div class="my-8 text-center">
+        <h3 class="mb-6">Great Success!</h3>
+        <p>
+          POAP event was successfuly deployed. <br />
+          Open the management for the POAP here:
+        </p>
+      </div>
+
+      <Btn size="large" @click="manageCreatedPoap()"> Manage POAP </Btn>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-const { currStep, formData, rules } = usePoapDrop();
-const collections = ref();
+import { FormValidationError } from 'naive-ui/es/form';
+import SuccessSVG from '~/assets/images/success.svg';
+
+const { handleError } = useErrors();
+const { currStep, formData, rules, formRef } = usePoapDrop();
 const router = useRouter();
+const message = useMessage();
+
+const collections = ref();
+const loading = ref(false);
+
+let createdPoapDrop: any;
+let title = 'Create new POAP drop';
 
 onMounted(async () => {
   await getCollections();
@@ -86,17 +113,47 @@ async function getCollections() {
   collections.value = (res as any).data.items;
 }
 
+function validateFormAndProceed() {
+  if (currStep.value === 1) {
+    if (formData.collectionUuid) currStep.value++;
+    else {
+      message.warning('Please select NFT collection, that will be used for drop');
+    }
+  } else if (currStep.value === 2) {
+    formRef.value?.validate((errors: Array<FormValidationError> | undefined) => {
+      if (errors) {
+        errors.map(fieldErrors =>
+          fieldErrors.map(error => message.warning(error.message || 'Error'))
+        );
+      } else {
+        currStep.value = 3;
+      }
+    });
+  }
+}
+
 async function createPoapDrop() {
+  loading.value = true;
   try {
     const res = await $api.put<any>(`/poap-drops`, {
       ...formData,
       startTime: new Date(formData.startTime),
       endTime: new Date(formData.endTime),
     });
-    console.info(res);
-    router.push('');
+    loading.value = false;
+    // router.push('');
+    currStep.value = 4;
+    title = 'POAP drop ready';
+    createdPoapDrop = res.data;
   } catch (error) {
-    // message.error(userFriendlyMsg(error));
+    handleError(error, 'Error creating new POAP');
+    loading.value = false;
+  }
+}
+
+function manageCreatedPoap() {
+  if (createdPoapDrop) {
+    router.push(`/poaps/${createdPoapDrop.id}`);
   }
 }
 </script>

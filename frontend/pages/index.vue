@@ -1,53 +1,65 @@
 <template>
-  <div class="grid justify-items-center">
-    <div class="text-lg"><span>Proof of attendance</span></div>
-    <div v-if="!isConnected">
-      <Btn @click="connect({ connector: connectors[0] })">Connect wallet</Btn>
-    </div>
-    <div v-if="isConnected && !jwt">
-      <Btn v-if="!poapStore.poaps" type="primary" @click="login()">Login</Btn>
-    </div>
-    <div v-if="poapStore.poaps" class="flex flex-col">
-      <div v-if="poapStore.poaps?.items?.length != 0">
-        <n-data-table
-          :columns="columns"
-          :data="poapStore.poaps.items"
-          :pagination="pagination"
-          :bordered="false"
-        />
+  <div>
+    <div v-if="isLoggedIn" class="grid justify-items-center">
+      <h1>Existing POAP drops</h1>
+      <div v-if="poapStore.poaps" class="flex flex-col mt-8">
+        <div v-if="poapStore.poaps?.items?.length != 0">
+          <n-data-table
+            :columns="columns"
+            :data="poapStore.poaps.items"
+            :pagination="pagination"
+            :bordered="false"
+            :row-props="rowProps"
+            @update:page="handlePageChange"
+          />
+        </div>
+        <span v-if="poapStore.poaps.items.length == 0">You dont have any POAP drops yet.</span>
+        <Btn type="primary" class="mt-8" @click="router.push('create-poap')">Create new poap</Btn>
       </div>
-      <span v-if="poapStore.poaps.items.length == 0">You dont have any POAP drops yet.</span>
-      <Btn type="primary" @click="router.push('create-poap')">Create new poap</Btn>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useAccount, useConnect, useWalletClient } from 'use-wagmi';
+import { useAccount } from 'use-wagmi';
 import { h } from 'vue';
-import { DataTableColumns, NButton, NDropdown } from 'naive-ui';
+import { DataTableColumns, NButton, NDropdown, PaginationProps } from 'naive-ui';
+import { ON_COLUMN_CLICK_OPEN_CLASS, PAGINATION_LIMIT } from '~/lib/values/general.values';
 
 useNuxtApp();
 const router = useRouter();
-const pagination = false;
-const { data: walletClient, refetch } = useWalletClient();
 const { isConnected } = useAccount();
-
-const jwt = ref();
+const userStore = useUserStore();
 const poapStore = usePoapDropStore();
-const modalCreatePoapDrop = ref<boolean>(false);
 
-const { connect, connectors } = useConnect({
-  onSuccess() {
-    console.log('connected');
-  },
+const isLoggedIn = computed(() => isConnected.value && userStore.jwt);
+
+onMounted(async () => {
+  if (isLoggedIn.value) {
+    await poapStore.getPoapDrops();
+  }
 });
 
+watch(
+  () => isLoggedIn.value,
+  async _ => {
+    if (isLoggedIn.value) {
+      await poapStore.getPoapDrops();
+    }
+  }
+);
+
+const pagination = computed(() => {
+  return {
+    pageSize: PAGINATION_LIMIT,
+  };
+});
 const columns: DataTableColumns<any> = [
   {
     title: 'Title',
     key: 'title',
     minWidth: 150,
+    className: ON_COLUMN_CLICK_OPEN_CLASS,
   },
   {
     title: 'Description',
@@ -87,8 +99,7 @@ const columns: DataTableColumns<any> = [
               NButton,
               { type: 'tertiary', size: 'small', quaternary: true, round: true },
               {
-                default: () =>
-                  h(resolveComponent('NuxtIcon'), { name: 'more', class: 'text-xl' }, ''),
+                default: () => h(resolveComponent('i'), { class: 'icon-more text-xl' }, ''),
               }
             ),
         }
@@ -96,6 +107,21 @@ const columns: DataTableColumns<any> = [
     },
   },
 ];
+
+function rowProps(row: any) {
+  return {
+    onClick: (e: Event) => {
+      console.info('row', row);
+      if (canOpenColumnCell(e.composedPath())) {
+        navigateToPoapDrop(row);
+      }
+    },
+  };
+}
+
+async function handlePageChange(currentPage: number) {
+  await poapStore.getPoapDrops({ page: currentPage });
+}
 
 useHead({
   title: 'Apillon Proof of attendance prebuilt solution',
@@ -116,37 +142,6 @@ const dropdownOptions = (poapDrop: any) => {
   ];
 };
 
-/* onMounted(() => {
-  if (jwt.value) {
-    poapStore.getPoapDrops();
-  }
-}); */
-
-async function login() {
-  if (!isConnected.value) {
-    await connect({ connector: connectors.value[0] });
-  } else {
-    await refetch();
-    if (!walletClient.value) {
-      alert('walletNotConnected');
-      return;
-    }
-    console.log(walletClient.value);
-    const timestamp = new Date().getTime();
-    const message = 'test';
-
-    const signature = await walletClient.value.signMessage({ message: `${message}\n${timestamp}` });
-    const res = await $api.post('/login', {
-      signature,
-      timestamp,
-    });
-    jwt.value = res.data.jwt;
-    if (jwt.value) {
-      $api.setToken(jwt.value);
-      poapStore.getPoapDrops();
-    }
-  }
-}
 function navigateToPoapDrop(poapDrop: any) {
   router.push(`/poaps/${poapDrop.id}`);
 }

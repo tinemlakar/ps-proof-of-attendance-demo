@@ -24,18 +24,27 @@ export type AuthResponse = {
   };
 };
 
-declare global {
-  /** Papa parser */
-  type CsvFileData = {
-    data: Array<any>;
-    errors: Array<any>;
-    meta: {
-      aborted: boolean;
-      cursor: number;
-      delimeter: string;
-      fields: Array<string>;
-      linebreak: string;
-      truncated: boolean;
-    };
+/** Response */
+type GeneralResponse<T> = {
+  data: T;
+  id: string;
+  status: number;
+};
+type GeneralItemsResponse<T> = {
+  data: {
+    items: Array<T>;
+    total: number;
   };
+  id: string;
+  status: number;
+};
+type SuccessResponse = GeneralResponse<{ success: boolean }>;
+
+interface FetchParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  orderBy?: string;
+  order?: string;
+  loader?: boolean;
 }

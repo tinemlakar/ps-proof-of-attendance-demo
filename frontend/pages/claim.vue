@@ -6,7 +6,7 @@ definePageMeta({
   layout: 'claim',
 });
 useHead({
-  title: 'Apillon email airdrop prebuilt solution',
+  title: 'Apillon POAP prebuilt solution',
 });
 
 const { query } = useRoute();
@@ -44,7 +44,7 @@ async function claimAirdrop() {
     }
 
     const signature = await walletClient.value.signMessage({ message: `test\n${timestamp}` });
-    const res = await $api.post<SuccessResponse>('/users/claim', {
+    const res = await $api.post<SuccessResponse>('/claim', {
       jwt: query.token?.toString() || '',
       signature,
       address: address.value,
@@ -62,15 +62,26 @@ async function claimAirdrop() {
 </script>
 
 <template>
-  <FormShare v-if="claimed" />
+  <!--<FormShare v-if="claimed" />-->
+  <div v-if="claimed">
+    <img :src="SuccessSVG" class="mx-auto" width="165" height="169" alt="airdrop" />
+
+    <div class="my-8 text-center">
+      <h3 class="mb-6">Great Success!</h3>
+      <p>
+        You have successfully received POAP NFT, which you can use to proove that you were part of
+        the event.
+      </p>
+    </div>
+  </div>
   <div v-else class="max-w-md w-full md:px-6 my-12 mx-auto">
     <img :src="SuccessSVG" class="mx-auto" width="165" height="169" alt="airdrop" />
 
     <div class="my-8 text-center">
       <h3 class="mb-6">Great Success!</h3>
       <p>
-        To join this NFT airdrop, you need to connect your EVM compatible wallet. This step is
-        crucial for securely receiving and managing the airdropped NFTs.
+        To claim your POAP (NFT airdrop), you need to connect your EVM compatible wallet. This step
+        is crucial for securely receiving and managing the airdropped NFTs.
       </p>
     </div>
 

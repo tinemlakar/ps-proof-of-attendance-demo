@@ -25,6 +25,13 @@ export function inject(app: Application) {
     }
   );
 
+  app.delete(
+    "/poap-drops/:dropId",
+    (req: Request, res: Response, next: NextFunction) => {
+      deletePoapDrop(req, res).catch(next);
+    }
+  );
+
   app.put("/poap-drops", (req: Request, res: Response, next: NextFunction) => {
     putPoapDrop(req, res).catch(next);
   });
@@ -60,8 +67,6 @@ export async function putPoapDrop(req: Request, res: Response): Promise<void> {
     //Create
     poapDrop.populate(body, PopulateStrategy.ADMIN);
 
-    //TODO: Validate collection
-
     await poapDrop.validateAndCreate();
 
     return res.respond(201, poapDrop.serialize(SerializedStrategy.ADMIN));
@@ -75,6 +80,22 @@ export async function putPoapDrop(req: Request, res: Response): Promise<void> {
     poapDrop.populate(body, SerializedStrategy.ADMIN);
 
     await poapDrop.validateAndUpdate();
+  }
+}
+
+export async function deletePoapDrop(
+  req: Request,
+  res: Response
+): Promise<void> {
+  const { context, params, query } = req;
+  if (params.dropId) {
+    const poapDrop = await new PoapDrop({}, { context }).populateById(
+      +params.dropId
+    );
+    if (poapDrop.exists()) {
+      await poapDrop.removeFromDb();
+    }
+    return res.respond(200, { success: true });
   }
 }
 

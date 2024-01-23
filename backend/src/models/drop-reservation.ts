@@ -118,7 +118,7 @@ export class DropReservation extends BaseSqlModel {
       );
     }
 
-    await this.insert(SerializedStrategy.ADMIN, conn);
+    await this.insert(SerializedStrategy.DB, conn);
   }
 
   public async validateAndUpdate(conn?: PoolConnection) {
@@ -166,11 +166,6 @@ export class DropReservation extends BaseSqlModel {
           filters.orderArr
             ? `${filters.orderArr.join(", ") || "dr.updateTime DESC"}`
             : "dr.updateTime DESC"
-        }
-        ${
-          filters.limit !== null
-            ? `LIMIT ${filters.limit} OFFSET ${filters.offset}`
-            : ""
         };
       `,
     };

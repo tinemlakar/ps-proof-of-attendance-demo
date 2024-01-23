@@ -65,7 +65,7 @@ export async function resolve(req: Request, res: Response): Promise<void> {
 
   const emailAirdropToken = await generateEmailAirdropToken(
     dropReservation.email,
-    dropReservation.id
+    dropReservation.poapDrop_id
   );
 
   try {

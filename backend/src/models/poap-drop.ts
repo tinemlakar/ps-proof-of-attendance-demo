@@ -118,7 +118,7 @@ export class PoapDrop extends BaseSqlModel {
       throw new ValidationError(this, this.getContext(), "PoapDrop.create()");
     }
 
-    await this.insert(SerializedStrategy.ADMIN, conn);
+    await this.insert(SerializedStrategy.DB, conn);
   }
 
   public async validateAndUpdate(conn?: PoolConnection) {
@@ -164,11 +164,6 @@ export class PoapDrop extends BaseSqlModel {
           filters.orderArr
             ? `${filters.orderArr.join(", ") || "pd.updateTime DESC"}`
             : "pd.updateTime DESC"
-        }
-        ${
-          filters.limit !== null
-            ? `LIMIT ${filters.limit} OFFSET ${filters.offset}`
-            : ""
         };
       `,
     };

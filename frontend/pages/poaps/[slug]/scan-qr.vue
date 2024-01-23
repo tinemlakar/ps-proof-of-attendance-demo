@@ -3,35 +3,34 @@
     <h1>Scan the code and receive NFT</h1>
     <n-qr-code v-if="qrCodeText" :value="qrCodeText" class="mt-16" :size="200" />
 
-    <Btn
+    <!--<Btn
       size="small"
       type="primary"
       class="mt-12"
-      @click="router.push(`/poaps/${params?.slug}/reserve-mint?token=${qrCodeText}`)"
+      @click="router.push(`/poaps/${params?.slug}/reserve-mint?token=${token}`)"
       >Reserve mint</Btn
-    >
+    >-->
   </div>
 </template>
 
 <script lang="ts" setup>
+const CONFIG = getConfig();
 const router = useRouter();
 const { params } = useRoute();
 const poapStore = usePoapDropStore();
-let qrCodeInterval: any = null as any;
 const qrCodeText = ref('');
+const token = ref('');
+let qrCodeInterval: any = null as any;
 
 /** Website ID from route */
 const poapId = ref<string>(`${params?.slug}`);
 
 onMounted(async () => {
   await poapStore.getPoapDrop(poapId.value);
-
-  const response = await $api.get(`/poap-drops/${poapId.value}/drop-reservation-token`);
-  qrCodeText.value = (response as any).data.token;
+  await setQrCodeValue();
 
   qrCodeInterval = setInterval(async () => {
-    const response = await $api.get(`/poap-drops/${poapId.value}/drop-reservation-token`);
-    qrCodeText.value = (response as any).data.token;
+    await setQrCodeValue();
   }, 5000);
 });
 
@@ -39,4 +38,12 @@ onBeforeUnmount(() => {
   console.info('onBefore unmount');
   clearInterval(qrCodeInterval);
 });
+
+async function setQrCodeValue() {
+  const response = await $api.get(`/poap-drops/${poapId.value}/drop-reservation-token`);
+  qrCodeText.value = `${CONFIG.APP_URL}/poaps/${poapId.value}/reserve-mint?token=${
+    (response as any).data.token
+  }`;
+  token.value = (response as any).data.token;
+}
 </script>

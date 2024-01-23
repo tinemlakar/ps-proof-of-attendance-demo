@@ -21,10 +21,11 @@ export const usePoapDropStore = defineStore('poapDrop', {
   },
 
   actions: {
-    async getPoapDrops() {
+    async getPoapDrops(args: FetchParams = {}) {
       try {
+        const params = parseArguments(args);
         // Get poap drops
-        const poapDropsApiResponse = await $api.get('/poap-drops');
+        const poapDropsApiResponse = await $api.get('/poap-drops', params);
         this.poapDrops = (poapDropsApiResponse as any).data;
       } catch (e: any) {
         console.error(e);

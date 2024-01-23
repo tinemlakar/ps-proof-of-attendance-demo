@@ -31,16 +31,14 @@
           <!--  Form submit -->
           <n-form-item class="flex justify-center">
             <input type="submit" class="hidden" />
-            <Btn type="primary" class="mt-2" :loading="loading" @click="handleSubmit">
-              Proceed
-            </Btn>
+            <Btn type="primary" :loading="loading" @click="handleSubmit"> Proceed </Btn>
           </n-form-item>
         </n-form>
 
-        <div class="mt-8">
+        <div class="mt-16 flex flex-col items-center">
           <h2>Time to reserve</h2>
           <n-progress
-            class="mt-8"
+            class="mt-4"
             type="line"
             :percentage="tokenValidityInPercent"
             :height="24"
@@ -48,6 +46,7 @@
             :fill-border-radius="0"
             :show-indicator="false"
           />
+          <p>5 min</p>
         </div>
       </div>
     </div>
@@ -59,14 +58,22 @@ import { jwtDecode } from 'jwt-decode';
 import dayjs from 'dayjs';
 import { FormInst, FormRules, FormValidationError } from 'naive-ui/es/form';
 
-const loading = ref(false);
+definePageMeta({
+  layout: 'reserve',
+});
+useHead({
+  title: 'Apillon POAP prebuilt solution',
+});
+const { handleError } = useErrors();
 const message = useMessage();
 const { params, query } = useRoute();
 const poapStore = usePoapDropStore();
+
+const loading = ref(false);
 const isTokenValid = ref(true);
-let calcRemainingTimeInterval: any = null as any;
 const tokenValidityInPercent = ref(100);
 const dropReserved = ref(false);
+let calcRemainingTimeInterval: any = null as any;
 
 const token = query.token?.toString();
 
@@ -75,7 +82,6 @@ const formData = reactive<any>({
   email: null,
   token,
 });
-
 const rules: FormRules = {
   email: [
     {
@@ -121,7 +127,6 @@ onMounted(() => {
       const tokenAgeInMs = currDate - tokenIssueDate;
 
       tokenValidityInPercent.value = 100 - (tokenAgeInMs * 100) / 300000;
-      console.info('tokenValidityInPercent', tokenValidityInPercent);
 
       if (tokenValidityInPercent.value <= 0) {
         tokenValidityInPercent.value = 0;
@@ -137,11 +142,18 @@ onBeforeUnmount(() => {
 });
 
 async function reserveMint() {
-  const res: any = await $api.post(`/poap-drops/${params.slug}/reserve-drop`, formData);
-  console.info('reserve drop server response', res);
-  if (res.data.id) {
-    dropReserved.value = true;
-    clearInterval(calcRemainingTimeInterval);
+  loading.value = true;
+  try {
+    const res: any = await $api.post(`/poap-drops/${params.slug}/reserve-drop`, formData);
+    if (res.data.id) {
+      dropReserved.value = true;
+      clearInterval(calcRemainingTimeInterval);
+    }
+  } catch (err: any) {
+    handleError();
+    // message.error(`Error reserving mint. ${apiErrorToMsg(err.data)}`);
   }
+
+  loading.value = false;
 }
 </script>

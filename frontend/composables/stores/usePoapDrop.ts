@@ -23,6 +23,20 @@ export default function usePoapDrop() {
         trigger: 'input',
       },
     ],
+    startTime: [
+      {
+        required: true,
+        type: 'date',
+        trigger: 'input',
+      },
+    ],
+    endTime: [
+      {
+        required: true,
+        type: 'date',
+        trigger: 'input',
+      },
+    ],
   };
 
   // Submit
