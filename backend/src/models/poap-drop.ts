@@ -160,11 +160,7 @@ export class PoapDrop extends BaseSqlModel {
       qGroup: `
         `,
       qFilter: `
-        ORDER BY ${
-          filters.orderArr
-            ? `${filters.orderArr.join(", ") || "pd.updateTime DESC"}`
-            : "pd.updateTime DESC"
-        };
+        ORDER BY pd.startTime DESC;
       `,
     };
 

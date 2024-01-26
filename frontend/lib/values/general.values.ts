@@ -10,4 +10,4 @@ export const WebStorageKeys = {
 };
 
 export const ON_COLUMN_CLICK_OPEN_CLASS = 'onClickOpen';
-export const PAGINATION_LIMIT = 3;
+export const PAGINATION_LIMIT = 10;
