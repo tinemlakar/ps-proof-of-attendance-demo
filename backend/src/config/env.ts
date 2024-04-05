@@ -29,7 +29,7 @@ export interface IEnv {
   SMTP_EMAIL_FROM: string;
   SMTP_EMAIL_FROM_HELLO: string;
   APP_URL_BASE: string;
-  ADMIN_WALLET: string;
+  ADMIN_WALLET: string[];
 
   MYSQL_HOST_TEST: string;
   MYSQL_PORT_TEST: number;
@@ -76,7 +76,8 @@ export const env = {
   /**
    * Admin
    */
-  ADMIN_WALLET: process.env["ADMIN_WALLET"].toLowerCase() || "",
+  ADMIN_WALLET:
+    process.env["ADMIN_WALLET"]?.toLocaleLowerCase().split(/[,;]/) || [],
 
   /**
    * Mysql URL.

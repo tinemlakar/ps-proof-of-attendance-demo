@@ -8,18 +8,24 @@ import { NextFunction, Request, Response } from "../http";
 import { PoapDrop } from "../models/poap-drop";
 import { ResourceError } from "../lib/errors";
 import { DropReservation } from "../models/drop-reservation";
+import { AuthenticateAdmin } from "../middlewares/authentication";
 
 /**
  * Installs new route on the provided application.
  * @param app ExpressJS application.
  */
 export function inject(app: Application) {
-  app.get("/poap-drops", (req: Request, res: Response, next: NextFunction) => {
-    getPoapDrops(req, res).catch(next);
-  });
+  app.get(
+    "/poap-drops",
+    AuthenticateAdmin,
+    (req: Request, res: Response, next: NextFunction) => {
+      getPoapDrops(req, res).catch(next);
+    }
+  );
 
   app.get(
     "/poap-drops/:dropId",
+    AuthenticateAdmin,
     (req: Request, res: Response, next: NextFunction) => {
       getPoapDrops(req, res).catch(next);
     }
@@ -27,17 +33,23 @@ export function inject(app: Application) {
 
   app.delete(
     "/poap-drops/:dropId",
+    AuthenticateAdmin,
     (req: Request, res: Response, next: NextFunction) => {
       deletePoapDrop(req, res).catch(next);
     }
   );
 
-  app.put("/poap-drops", (req: Request, res: Response, next: NextFunction) => {
-    putPoapDrop(req, res).catch(next);
-  });
+  app.put(
+    "/poap-drops",
+    AuthenticateAdmin,
+    (req: Request, res: Response, next: NextFunction) => {
+      putPoapDrop(req, res).catch(next);
+    }
+  );
 
   app.get(
     "/poap-drops/:dropId/drop-reservations",
+    AuthenticateAdmin,
     (req: Request, res: Response, next: NextFunction) => {
       getPoapDropReservations(req, res).catch(next);
     }
@@ -66,9 +78,7 @@ export async function putPoapDrop(req: Request, res: Response): Promise<void> {
   if (!body.id) {
     //Create
     poapDrop.populate(body, PopulateStrategy.ADMIN);
-
     await poapDrop.validateAndCreate();
-
     return res.respond(201, poapDrop.serialize(SerializedStrategy.ADMIN));
   } else {
     //Update

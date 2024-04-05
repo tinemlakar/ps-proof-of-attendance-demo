@@ -65,7 +65,7 @@ export function readAdminAuthToken(token: string) {
     const { wallet } = jwt.verify(token, env.APP_SECRET, {
       subject,
     }) as any;
-    if (wallet && wallet.toLowerCase() === env.ADMIN_WALLET) {
+    if (wallet && env.ADMIN_WALLET.includes(wallet.toLowerCase())) {
       return {
         wallet,
         subject,
