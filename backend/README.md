@@ -30,7 +30,6 @@ ADMIN_WALLET: # your EVM wallet address
 # Create (free) account at https://apillon.io to and setup API key and NFT collection
 APILLON_KEY: # Apillon api key
 APILLON_SECRET: # Apillon api key secret
-COLLECTION_UUID:  # Apillon NFT collection UUID
 
 # Your email server configuration
 SMTP_HOST: 
