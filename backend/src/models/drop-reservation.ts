@@ -1,19 +1,19 @@
-import { integerParser, stringParser } from "@rawmodel/parsers";
-import { presenceValidator } from "@rawmodel/validators";
+import { integerParser, stringParser } from '@rawmodel/parsers';
+import { presenceValidator } from '@rawmodel/validators';
 import {
   AirdropStatus,
   PopulateStrategy,
   SerializedStrategy,
   ValidatorErrorCode,
-} from "../config/values";
-import { stringTrimParser } from "../lib/parsers";
-import { BaseSqlModel, prop } from "./base-sql-model";
-import { ValidationError } from "../lib/errors";
-import { PoolConnection } from "mysql2/promise";
-import { getQueryParams, selectAndCountQuery } from "../lib/sql-utils";
+} from '../config/values';
+import { stringTrimParser } from '../lib/parsers';
+import { BaseSqlModel, prop } from './base-sql-model';
+import { ValidationError } from '../lib/errors';
+import { PoolConnection } from 'mysql2/promise';
+import { getQueryParams, selectAndCountQuery } from '../lib/sql-utils';
 
 export class DropReservation extends BaseSqlModel {
-  protected _tableName = "drop_reservation";
+  protected _tableName = 'drop_reservation';
 
   @prop({
     parser: { resolver: integerParser() },
@@ -93,7 +93,7 @@ export class DropReservation extends BaseSqlModel {
       SELECT * FROM ${this._tableName}
       WHERE poapDrop_id = @poapDrop_id AND email = @email
     `,
-      { poapDrop_id, email }
+      { poapDrop_id, email },
     );
 
     if (data && data.length) {
@@ -114,7 +114,7 @@ export class DropReservation extends BaseSqlModel {
       throw new ValidationError(
         this,
         this.getContext(),
-        "DropReservation.create()"
+        'DropReservation.create()',
       );
     }
 
@@ -132,7 +132,7 @@ export class DropReservation extends BaseSqlModel {
       throw new ValidationError(
         this,
         this.getContext(),
-        "DropReservation.create()"
+        'DropReservation.create()',
       );
     }
 
@@ -142,9 +142,9 @@ export class DropReservation extends BaseSqlModel {
   public async getList(urlQuery) {
     const { params, filters } = getQueryParams(
       { poap_id: null },
-      "dr",
+      'dr',
       {},
-      urlQuery
+      urlQuery,
     );
     if (filters.limit === -1) {
       filters.limit = null;
@@ -164,12 +164,12 @@ export class DropReservation extends BaseSqlModel {
       qFilter: `
         ORDER BY ${
           filters.orderArr
-            ? `${filters.orderArr.join(", ") || "dr.updateTime DESC"}`
-            : "dr.updateTime DESC"
+            ? `${filters.orderArr.join(', ') || 'dr.updateTime DESC'}`
+            : 'dr.updateTime DESC'
         };
       `,
     };
 
-    return await selectAndCountQuery(this.db(), sqlQuery, params, "dr.id");
+    return await selectAndCountQuery(this.db(), sqlQuery, params, 'dr.id');
   }
 }

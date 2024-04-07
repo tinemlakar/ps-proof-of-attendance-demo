@@ -1,18 +1,18 @@
-import { dateParser } from "@rawmodel/parsers";
-import { presenceValidator } from "@rawmodel/validators";
+import { dateParser } from '@rawmodel/parsers';
+import { presenceValidator } from '@rawmodel/validators';
 import {
   PopulateStrategy,
   SerializedStrategy,
   ValidatorErrorCode,
-} from "../config/values";
-import { stringTrimParser } from "../lib/parsers";
-import { BaseSqlModel, prop } from "./base-sql-model";
-import { ValidationError } from "../lib/errors";
-import { PoolConnection } from "mysql2/promise";
-import { getQueryParams, selectAndCountQuery } from "../lib/sql-utils";
+} from '../config/values';
+import { stringTrimParser } from '../lib/parsers';
+import { BaseSqlModel, prop } from './base-sql-model';
+import { ValidationError } from '../lib/errors';
+import { PoolConnection } from 'mysql2/promise';
+import { getQueryParams, selectAndCountQuery } from '../lib/sql-utils';
 
 export class PoapDrop extends BaseSqlModel {
-  protected _tableName = "poap_drop";
+  protected _tableName = 'poap_drop';
 
   @prop({
     parser: { resolver: stringTrimParser() },
@@ -28,7 +28,7 @@ export class PoapDrop extends BaseSqlModel {
         code: ValidatorErrorCode.POAP_DROP_REQUIRED_DATA_NOT_PRESENT,
       },
     ],
-    fakeValue: "Fake Poap drop",
+    fakeValue: 'Fake Poap drop',
   })
   public title: string;
 
@@ -115,7 +115,7 @@ export class PoapDrop extends BaseSqlModel {
     }
 
     if (!this.isValid()) {
-      throw new ValidationError(this, this.getContext(), "PoapDrop.create()");
+      throw new ValidationError(this, this.getContext(), 'PoapDrop.create()');
     }
 
     await this.insert(SerializedStrategy.DB, conn);
@@ -129,7 +129,7 @@ export class PoapDrop extends BaseSqlModel {
     }
 
     if (!this.isValid()) {
-      throw new ValidationError(this, this.getContext(), "PoapDrop.create()");
+      throw new ValidationError(this, this.getContext(), 'PoapDrop.create()');
     }
 
     await this.update(SerializedStrategy.UPDATE_DB, { conn });
@@ -138,9 +138,9 @@ export class PoapDrop extends BaseSqlModel {
   public async getList(urlQuery) {
     const { params, filters } = getQueryParams(
       { id: null, title: null, status: null },
-      "pd",
+      'pd',
       {},
-      urlQuery
+      urlQuery,
     );
     if (filters.limit === -1) {
       filters.limit = null;
@@ -164,6 +164,6 @@ export class PoapDrop extends BaseSqlModel {
       `,
     };
 
-    return await selectAndCountQuery(this.db(), sqlQuery, params, "pd.id");
+    return await selectAndCountQuery(this.db(), sqlQuery, params, 'pd.id');
   }
 }

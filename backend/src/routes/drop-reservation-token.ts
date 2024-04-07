@@ -1,10 +1,10 @@
-import { Application } from "express";
-import { RouteErrorCode } from "../config/values";
-import { NextFunction, Request, Response } from "../http";
-import { ResourceError } from "../lib/errors";
-import { generateDropReservationToken } from "../lib/jwt";
-import { AuthenticateAdmin } from "../middlewares/authentication";
-import { PoapDrop } from "../models/poap-drop";
+import { Application } from 'express';
+import { RouteErrorCode } from '../config/values';
+import { NextFunction, Request, Response } from '../http';
+import { ResourceError } from '../lib/errors';
+import { generateDropReservationToken } from '../lib/jwt';
+import { AuthenticateAdmin } from '../middlewares/authentication';
+import { PoapDrop } from '../models/poap-drop';
 
 /**
  * Installs new route on the provided application.
@@ -12,11 +12,11 @@ import { PoapDrop } from "../models/poap-drop";
  */
 export function inject(app: Application) {
   app.get(
-    "/poap-drops/:id/drop-reservation-token",
+    '/poap-drops/:id/drop-reservation-token',
     AuthenticateAdmin,
     (req: Request, res: Response, next: NextFunction) => {
       resolve(req, res).catch(next);
-    }
+    },
   );
 }
 

@@ -1,16 +1,16 @@
-import { Identity } from "@apillon/sdk";
-import { Application } from "express";
-import { RouteErrorCode } from "../config/values";
-import { NextFunction, Request, Response } from "../http";
-import { ResourceError } from "../lib/errors";
-import { generateAdminAuthToken } from "../lib/jwt";
+import { Identity } from '@apillon/sdk';
+import { Application } from 'express';
+import { RouteErrorCode } from '../config/values';
+import { NextFunction, Request, Response } from '../http';
+import { ResourceError } from '../lib/errors';
+import { generateAdminAuthToken } from '../lib/jwt';
 
 /**
  * Installs new route on the provided application.
  * @param app ExpressJS application.
  */
 export function inject(app: Application) {
-  app.post("/login", (req: Request, res: Response, next: NextFunction) => {
+  app.post('/login', (req: Request, res: Response, next: NextFunction) => {
     resolve(req, res).catch(next);
   });
 }

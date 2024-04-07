@@ -1,28 +1,28 @@
 export enum AppEnvironment {
-  DEV = "development",
-  TEST = "testing",
-  STG = "staging",
-  PROD = "production",
+  DEV = 'development',
+  TEST = 'testing',
+  STG = 'staging',
+  PROD = 'production',
 }
 
 /**
  * Serialized strategy.
  */
 export enum SerializedStrategy {
-  PROFILE = "profile",
-  DB = "db",
-  EXTENDED_DB = "extended_db",
-  UPDATE_DB = "update_db",
-  ADMIN = "admin",
+  PROFILE = 'profile',
+  DB = 'db',
+  EXTENDED_DB = 'extended_db',
+  UPDATE_DB = 'update_db',
+  ADMIN = 'admin',
 }
 
 /**
  * Populate strategy.
  */
 export enum PopulateStrategy {
-  ADMIN = "admin",
-  PROFILE = "profile",
-  DB = "db",
+  ADMIN = 'admin',
+  PROFILE = 'profile',
+  DB = 'db',
 }
 
 /**
@@ -45,9 +45,9 @@ export enum PaginationValues {
  * Request Token types.
  */
 export enum RequestToken {
-  AUTH_ADMIN = "authAdmin",
-  AIRDROP_EMAIL = "airdropEmail",
-  DROP_RESERVATION = "dropReservation",
+  AUTH_ADMIN = 'authAdmin',
+  AIRDROP_EMAIL = 'airdropEmail',
+  DROP_RESERVATION = 'dropReservation',
 }
 
 export enum AirdropStatus {

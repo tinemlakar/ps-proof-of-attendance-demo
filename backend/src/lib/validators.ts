@@ -1,11 +1,10 @@
-import { BaseSqlModel, SqlModelStatus } from "../models/base-sql-model";
-import { isNullOrUndefined } from "util";
-import { stringLengthValidator } from "@rawmodel/validators";
+import { BaseSqlModel, SqlModelStatus } from '../models/base-sql-model';
+import { stringLengthValidator } from '@rawmodel/validators';
 
 /**
  * Expose standard validators.
  */
-export * from "@rawmodel/validators";
+export * from '@rawmodel/validators';
 
 export function conditionalPresenceValidator(condition: boolean, value: any) {
   if (condition) {
@@ -23,7 +22,7 @@ export function conditionalStringLengthValidator(
     minOrEqual?: number;
     max?: number;
     maxOrEqual?: number;
-  }
+  },
 ) {
   if (condition) {
     return stringLengthValidator(recipe);
@@ -58,16 +57,16 @@ export function customArrayLengthValidator(options?: {
     }
     const size = value.length;
     const { min, minOrEqual, max, maxOrEqual } = options;
-    if (typeof min === "number" && !(size > min)) {
+    if (typeof min === 'number' && !(size > min)) {
       return false;
     }
-    if (typeof minOrEqual === "number" && !(size >= minOrEqual)) {
+    if (typeof minOrEqual === 'number' && !(size >= minOrEqual)) {
       return false;
     }
-    if (typeof max === "number" && !(size < max)) {
+    if (typeof max === 'number' && !(size < max)) {
       return false;
     }
-    if (typeof maxOrEqual === "number" && !(size <= maxOrEqual)) {
+    if (typeof maxOrEqual === 'number' && !(size <= maxOrEqual)) {
       return false;
     }
     return true;
@@ -80,11 +79,11 @@ export function customArrayLengthValidator(options?: {
 export function uniqueFieldValue(
   sqlTableName: string,
   fieldName: string,
-  idField = "id",
-  checkNull = false
+  idField = 'id',
+  checkNull = false,
 ) {
   return async function (this: BaseSqlModel, value: any) {
-    if (!checkNull && isNullOrUndefined(value)) {
+    if (!checkNull && (value == null || value == undefined)) {
       return true;
     }
     const count = await this.db()
@@ -93,7 +92,7 @@ export function uniqueFieldValue(
       SELECT COUNT(*) as Count FROM \`${sqlTableName}\`
       WHERE \`${fieldName}\` = @value
       AND (@id IS NULL OR (@id IS NOT NULL AND \`${idField}\` <> @id ))`,
-        { value, id: this.id }
+        { value, id: this.id },
       )
       .then((rows) => rows[0].Count);
 
@@ -108,11 +107,11 @@ export function uniqueFieldValueById(
   sqlTableName: string,
   fieldName: string,
   foreignId: string,
-  idField = "id",
-  checkNull = false
+  idField = 'id',
+  checkNull = false,
 ) {
   return async function (this: BaseSqlModel, value: any) {
-    if (!checkNull && isNullOrUndefined(value)) {
+    if (!checkNull && (value == null || value == undefined)) {
       return true;
     }
     const count = await this.db()
@@ -121,7 +120,7 @@ export function uniqueFieldValueById(
       SELECT COUNT(*) as Count FROM \`${sqlTableName}\`
       WHERE \`${fieldName}\` = @value AND \`${foreignId}\` = @foreignId
       AND (@id IS NULL OR (@id IS NOT NULL AND \`${idField}\` <> @id ))`,
-        { value, id: this.id, foreignId: this[foreignId] }
+        { value, id: this.id, foreignId: this[foreignId] },
       )
       .then((rows) => rows[0].Count);
 
@@ -136,11 +135,11 @@ export function uniqueFieldValueByIdActive(
   sqlTableName: string,
   fieldName: string,
   foreignId: string,
-  idField = "id",
-  checkNull = false
+  idField = 'id',
+  checkNull = false,
 ) {
   return async function (this: BaseSqlModel, value: any) {
-    if (!checkNull && isNullOrUndefined(value)) {
+    if (!checkNull && (value == null || value == undefined)) {
       return true;
     }
     const count = await this.db()
@@ -149,7 +148,7 @@ export function uniqueFieldValueByIdActive(
       SELECT COUNT(*) as Count FROM \`${sqlTableName}\`
       WHERE \`${fieldName}\` = @value AND \`${foreignId}\` = @foreignId AND status < 9
       AND (@id IS NULL OR (@id IS NOT NULL AND \`${idField}\` <> @id ))`,
-        { value, id: this.id, foreignId: this[foreignId] }
+        { value, id: this.id, foreignId: this[foreignId] },
       )
       .then((rows) => rows[0].Count);
 
@@ -168,7 +167,7 @@ export function foreignKeyPresence(sqlTableName: string) {
       SELECT COUNT(*) as Count FROM \`${sqlTableName}\`
       WHERE id = @value
     `,
-        { value }
+        { value },
       )
       .then((rows) => rows[0].Count);
 
@@ -206,7 +205,7 @@ export function enumInclusionValidator(enumerator: any) {
 
 export function statusDependantPresenceValidator(
   status: SqlModelStatus,
-  exclusion = false
+  exclusion = false,
 ) {
   return function (this: BaseSqlModel, value: any) {
     if (

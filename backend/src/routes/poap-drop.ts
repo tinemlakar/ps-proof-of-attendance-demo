@@ -1,14 +1,14 @@
-import { Application } from "express";
+import { Application } from 'express';
 import {
   PopulateStrategy,
   RouteErrorCode,
   SerializedStrategy,
-} from "../config/values";
-import { NextFunction, Request, Response } from "../http";
-import { PoapDrop } from "../models/poap-drop";
-import { ResourceError } from "../lib/errors";
-import { DropReservation } from "../models/drop-reservation";
-import { AuthenticateAdmin } from "../middlewares/authentication";
+} from '../config/values';
+import { NextFunction, Request, Response } from '../http';
+import { PoapDrop } from '../models/poap-drop';
+import { ResourceError } from '../lib/errors';
+import { DropReservation } from '../models/drop-reservation';
+import { AuthenticateAdmin } from '../middlewares/authentication';
 
 /**
  * Installs new route on the provided application.
@@ -16,43 +16,43 @@ import { AuthenticateAdmin } from "../middlewares/authentication";
  */
 export function inject(app: Application) {
   app.get(
-    "/poap-drops",
+    '/poap-drops',
     AuthenticateAdmin,
     (req: Request, res: Response, next: NextFunction) => {
       getPoapDrops(req, res).catch(next);
-    }
+    },
   );
 
   app.get(
-    "/poap-drops/:dropId",
+    '/poap-drops/:dropId',
     AuthenticateAdmin,
     (req: Request, res: Response, next: NextFunction) => {
       getPoapDrops(req, res).catch(next);
-    }
+    },
   );
 
   app.delete(
-    "/poap-drops/:dropId",
+    '/poap-drops/:dropId',
     AuthenticateAdmin,
     (req: Request, res: Response, next: NextFunction) => {
       deletePoapDrop(req, res).catch(next);
-    }
+    },
   );
 
   app.put(
-    "/poap-drops",
+    '/poap-drops',
     AuthenticateAdmin,
     (req: Request, res: Response, next: NextFunction) => {
       putPoapDrop(req, res).catch(next);
-    }
+    },
   );
 
   app.get(
-    "/poap-drops/:dropId/drop-reservations",
+    '/poap-drops/:dropId/drop-reservations',
     AuthenticateAdmin,
     (req: Request, res: Response, next: NextFunction) => {
       getPoapDropReservations(req, res).catch(next);
-    }
+    },
   );
 }
 
@@ -63,7 +63,7 @@ export async function getPoapDrops(req: Request, res: Response): Promise<void> {
       200,
       (
         await new PoapDrop({}, { context }).populateById(+params.dropId)
-      ).serialize(SerializedStrategy.ADMIN)
+      ).serialize(SerializedStrategy.ADMIN),
     );
   } else {
     return res.respond(200, await new PoapDrop({}, { context }).getList(query));
@@ -95,12 +95,12 @@ export async function putPoapDrop(req: Request, res: Response): Promise<void> {
 
 export async function deletePoapDrop(
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> {
   const { context, params, query } = req;
   if (params.dropId) {
     const poapDrop = await new PoapDrop({}, { context }).populateById(
-      +params.dropId
+      +params.dropId,
     );
     if (poapDrop.exists()) {
       await poapDrop.removeFromDb();
@@ -111,12 +111,12 @@ export async function deletePoapDrop(
 
 export async function getPoapDropReservations(
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> {
   const { context, params, query } = req;
   query.poapDrop_id = params.dropId;
   return res.respond(
     200,
-    await new DropReservation({}, { context }).getList(query)
+    await new DropReservation({}, { context }).getList(query),
   );
 }

@@ -2,15 +2,15 @@ import {
   createContextAndStartServer,
   Stage,
   stopServerAndCloseMySqlContext,
-} from "../helpers/context";
-import * as request from "supertest";
-import { setupTestDatabase, clearTestDatabase } from "../helpers/migrations";
-import { HDNodeWallet, Wallet } from "ethers";
-import { Identity } from "@apillon/sdk";
+} from '../helpers/context';
+import * as request from 'supertest';
+import { setupTestDatabase, clearTestDatabase } from '../helpers/migrations';
+import { HDNodeWallet, Wallet } from 'ethers';
+import { Identity } from '@apillon/sdk';
 let stage: Stage;
 let adminWallet: HDNodeWallet;
 
-describe("admin login", () => {
+describe('admin login', () => {
   beforeAll(async () => {
     adminWallet = Wallet.createRandom();
     stage = await createContextAndStartServer({
@@ -24,7 +24,7 @@ describe("admin login", () => {
     await stopServerAndCloseMySqlContext(stage);
   });
 
-  test("login", async () => {
+  test('login', async () => {
     const timestamp = new Date().getTime();
     const message = `test\n${timestamp}`;
 
@@ -33,7 +33,7 @@ describe("admin login", () => {
 
     const data = { signature, timestamp };
 
-    const res = await request(stage.app).post("/login").send(data);
+    const res = await request(stage.app).post('/login').send(data);
 
     expect(res.status).toBe(200);
   });
