@@ -99,3 +99,34 @@ If you correctly setup .env files, you can run app in docker by running
 ```sh
 docker compose up -d
 ```
+
+## Automated testing
+
+In this prebuilt solution, we have limit our automated tests to basic end-to-end tests. Default testing framework for this project is [Jest](https://jestjs.io/docs/en/getting-started). Test are written in `tests` directory.
+
+For running tests, check if all environment variables with suffix `_TEST` are correctly set. If running locally, variables should be set in your `.env` file in root folder.
+
+```yml
+# TEST config
+MYSQL_HOST_TEST: 127.0.0.1
+MYSQL_DB_TEST: Poap_test
+MYSQL_USER_TEST:
+MYSQL_PASSWORD_TEST:
+MYSQL_POOL_TEST: 20
+```
+
+### Running API tests
+
+```ssh
+npm run test
+```
+
+To run single test
+
+```ssh
+npm run test -- <search pattern>
+```
+
+> note the blank space after `--`
+
+Search pattern is used to find file with test. You may use filename or part of filename, for example `login.test`

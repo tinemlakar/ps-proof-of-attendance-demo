@@ -14,7 +14,7 @@ describe('admin login', () => {
   beforeAll(async () => {
     adminWallet = Wallet.createRandom();
     stage = await createContextAndStartServer({
-      ADMIN_WALLET: adminWallet.address,
+      ADMIN_WALLET: [adminWallet.address.toLowerCase()],
     });
     await setupTestDatabase();
   });
@@ -28,13 +28,13 @@ describe('admin login', () => {
     const timestamp = new Date().getTime();
     const message = `test\n${timestamp}`;
 
-    const identity = new Identity();
     const signature = await adminWallet.signMessage(message);
 
-    const data = { signature, timestamp };
+    const data = { signature, timestamp, address: adminWallet.address };
 
     const res = await request(stage.app).post('/login').send(data);
 
     expect(res.status).toBe(200);
+    expect(res.body.data.jwt).toBeTruthy();
   });
 });
