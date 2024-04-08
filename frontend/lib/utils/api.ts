@@ -118,7 +118,6 @@ class Api {
 
   async onResponse<T>(response: Response, requestData: Request | any) {
     if (response.status > 250) {
-      debugger;
       let errorData = { message: '' };
 
       try {

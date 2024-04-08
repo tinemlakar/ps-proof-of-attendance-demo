@@ -1,7 +1,6 @@
-import { NextFunction, Request, Response } from "../http";
-import { UnauthorizedError } from "../lib/errors";
-import { AuthorizationErrorCode } from "../config/values";
-import { SqlModelStatus } from "../models/base-sql-model";
+import { AuthorizationErrorCode } from '../config/values';
+import { NextFunction, Request, Response } from '../http';
+import { UnauthorizedError } from '../lib/errors';
 
 /**
  * Authenticate user and return error if user can't be authenticated
@@ -12,16 +11,16 @@ import { SqlModelStatus } from "../models/base-sql-model";
 export async function AuthenticateAdmin(
   req: Request,
   _res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const token = (
-    req.header("authToken") ||
-    req.header("Authorization") ||
-    req.query["token"] ||
-    " "
+    req.header('authToken') ||
+    req.header('Authorization') ||
+    req.query['token'] ||
+    ' '
   )
     .toString()
-    .split(" ")
+    .split(' ')
     .reverse()[0];
 
   const { context } = req;
@@ -29,7 +28,7 @@ export async function AuthenticateAdmin(
     throw new UnauthorizedError(
       AuthorizationErrorCode.MISSING_AUTH_TOKEN,
       context,
-      "authentication-middleware/AuthenticateUser"
+      'authentication-middleware/AuthenticateUser',
     );
   }
 
@@ -43,7 +42,7 @@ export async function AuthenticateAdmin(
     new UnauthorizedError(
       AuthorizationErrorCode.UNAUTHORIZED,
       context,
-      "authentication-middleware/AuthenticateUser"
-    )
+      'authentication-middleware/AuthenticateUser',
+    ),
   );
 }

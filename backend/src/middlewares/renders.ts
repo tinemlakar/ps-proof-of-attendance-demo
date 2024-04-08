@@ -1,5 +1,5 @@
-import { Application, RequestHandler } from "express";
-import { NextFunction, Request, Response } from "../http";
+import { Application, RequestHandler } from 'express';
+import { NextFunction, Request, Response } from '../http';
 
 /**
  * Applies a middleware with helper methods to application.
