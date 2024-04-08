@@ -24,14 +24,14 @@ npm run dev
 
 ### Endpoints
 
-| Route                                    | Description                                                                  | Authentication required |
-| ---------------------------------------- | ---------------------------------------------------------------------------- | ----------------------- |
-| `/login`                                 | Admin wallet login                                                           | false                   |
-| `/poap-drops`                            | CRUD endpoints for POA drops                                                 | true                    |
-| `/nft-collections`                       | Endpoint to get collections from Apillon platform                            | true                    |
-| `/poap-drops/:id/drop-reservation-token` | Endpoint to generate jwt for reservation (qr code)                           | true                    |
-| `/poap-drops/:id/reserve-drop`           | Endpoint to reserve nft drop. User recieves email with instructions for mint | true (token from email) |
-| `/claim`                                 | Endpoint for claim - Mint NFT to specified wallet address                    | true (token from email) |
+| Route                                        | Description                                                                  | Authentication required |
+| -------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------- |
+| POST `/login`                                | Admin wallet login                                                           | false                   |
+| GET/PUT/POST/DELETE `/poap-drops`            | CRUD endpoints for POA drops                                                 | true                    |
+| GET `/nft-collections`                       | Endpoint to get collections from Apillon platform                            | true                    |
+| GET `/poap-drops/:id/drop-reservation-token` | Endpoint to generate jwt for reservation (qr code)                           | true                    |
+| POST `/poap-drops/:id/reserve-drop`          | Endpoint to reserve nft drop. User recieves email with instructions for mint | true (token from email) |
+| POST `/claim`                                | Endpoint for claim - Mint NFT to specified wallet address                    | true (token from email) |
 
 ## Environment variables
 
