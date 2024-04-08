@@ -27,7 +27,6 @@ export interface IEnv {
   SMTP_PASSWORD: string;
   SMTP_NAME_FROM: string;
   SMTP_EMAIL_FROM: string;
-  SMTP_EMAIL_FROM_HELLO: string;
   APP_URL_BASE: string;
   ADMIN_WALLET: string[];
 
@@ -67,7 +66,6 @@ export const env = {
    */
   API_HOST: process.env['API_HOST'] || '127.0.0.1',
   API_PORT: parseInt(process.env['API_PORT']) || 3001,
-
   /**
    * Url base for FE.
    */
@@ -106,7 +104,6 @@ export const env = {
   SMTP_PASSWORD: process.env['SMTP_PASSWORD'],
   SMTP_NAME_FROM: process.env['SMTP_NAME_FROM'],
   SMTP_EMAIL_FROM: process.env['SMTP_EMAIL_FROM'],
-  SMTP_EMAIL_FROM_HELLO: process.env['SMTP_EMAIL_FROM_HELLO'],
 
   /**
    * Mysql test URL.

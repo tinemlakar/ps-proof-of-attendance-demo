@@ -1,0 +1,39 @@
+#####
+# This is an example of docker compose file for Apillon pre-built solutions. You are encouraged to change it according to your needs.
+#####
+
+version: '3.8'
+
+services:
+  poa_db:
+    image: mysql
+    container_name: poa_db
+    
+    ## Enviroment variables can be set in .env files or from build environment
+    ## Here is how you can use .env file (note: should be separate for each container)
+    env_file:
+      - .env.sql.deploy
+    
+    ## If you want to read variables from build environment comment out above section and uncomment below
+    # environment:
+    #   MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    #   MYSQL_DATABASE: ${MYSQL_DATABASE}
+
+    ports:
+      - '3306:3306'
+    restart: always
+
+  poa_app:
+    image: ps-poa:latest
+    container_name: poa_app
+    depends_on:
+      - poa_db
+
+    ## Enviroment variables can be set in .env files or from build environment
+    ## Here is how you can use .env file (note: should be separate for each container)
+    env_file:
+      - .env.deploy
+
+    ports:
+      - '8080:3000'
+    restart: always
