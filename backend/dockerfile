@@ -7,7 +7,7 @@ ENV APP_URL=http://localhost:3000
 ENV API_PORT=3000
 ENV API_HOST=0.0.0.0
 
-ENV MYSQL_HOST=poa_db
+ENV MYSQL_HOST=airdrop_db
 ENV MYSQL_PORT=3306
 ENV MYSQL_DB=poa
 ENV MYSQL_USER=root
@@ -43,7 +43,9 @@ ADD ./ ${appDir}/
 
 RUN npm install
 RUN npm run build
+RUN mkdir -p ./dist/templates/mail/ 
+RUN cp ./src/templates/mail/*.html ./dist/templates/mail/
 
 EXPOSE 3000
-RUN chmod +x ./bin/docker-start.sh
+RUN chmod +x ./bin/docker-start.sh ./bin/create-database.sh
 CMD ["./bin/docker-start.sh"]
